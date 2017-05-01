@@ -1,0 +1,40 @@
+---
+title: "Scrap Paper"
+author: "Jordan Moody, Marisa Youngblood, and Tara Marin"
+date: "5/1/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(macleish)
+library(tidyverse)
+library(sp)
+library(rgdal)
+library(leaflet)
+```
+
+```{r}
+#Creating weather data tables
+mac <- etl("macleish") %>%
+  etl_update()
+whately <- mac %>%
+  tbl("whately") %>%
+  collect(n = Inf)
+orchard <- mac %>%
+  tbl("orchard") %>%
+  collect(n = Inf)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
