@@ -1,0 +1,73 @@
+---
+title: "Mini Project 4"
+author: "Jordan Moody, Marisa Youngblood, and Tara Marin"
+date: "5/3/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(macleish)
+library(tidyverse)
+library(sp)
+library(rgdal)
+library(rgeos)
+library(ggplot2)
+```
+
+## problem statement and intro stuff
+
+```{r}
+#Creating weather data tables
+mac <- etl("macleish") %>%
+  etl_update()
+whately <- mac %>%
+  tbl("whately")
+orchard <- mac %>%
+  tbl("orchard")
+#making tables of daily max and min temperatures
+daily_whately <- whately %>%
+  mutate(the_date = date(when)) %>%
+  group_by(the_date) %>%
+  summarize(N = n(), minTemp = min(temperature), maxTemp = max(temperature), avgTemp = mean(temperature)) %>%
+  collect()
+daily_orchard <- orchard %>%
+  mutate(the_date = date(when)) %>%
+  group_by(the_date) %>%
+  summarize(N = n(), minTemp = min(temperature), maxTemp = max(temperature), avgTemp = mean(temperature)) %>%
+  collect()
+#making tables of sap-able days
+refined_whately <- daily_whately %>%
+  filter(minTemp < 0, maxTemp > 0) %>%
+  mutate(date = ymd(`the_date`))
+refined_orchard <- daily_orchard %>%
+  filter(minTemp < 0, maxTemp > 0) %>%
+  mutate(date = ymd(`the_date`))
+```
+
+##Best times to sap ASIDE
+I don't know how pretty I can make this graph, so it may not be something we have t include, but it shows that the best monthes to sap are November through March. There are good sapping days in October and early April, but not enough and not consistently enough for it to be logical to continue the sapping during those months. (generally two days in mid october and three or four throughout april)
+
+```{r}
+
+```
+
+##Quantity of maple syrup
+
+```{r}
+
+```
+
+##ASIDE 
+I don't have the sap table up yet but the totals for each year are:
+2013 = 675
+2014 = 255 (very sporadic data for collection, most days had NA)
+2015 = 349 (also fairly sporadic)
+2016 = no data for this year
+2017 = 259.5
+
+averages:
+2013 = 18.24
+2014 = 6.38
+2015 = 14.54
+2017 = 17.38
