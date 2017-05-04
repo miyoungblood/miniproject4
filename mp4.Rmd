@@ -16,7 +16,8 @@ library(rgeos)
 library(ggplot2)
 ```
 
-## problem statement and intro stuff
+###Problem Statement
+In the wooded parcel of MacLeish Field Station, farmers and Smith students alike work to collect sap from trees in the area. However, climate change and warmer temperatures have led to a disruption in once reliable seasons. Given that MacLeish is an integral part of a local economy of farmers, producers, and distributors, it is essential to improve research and development for predicting the start and end date for the sugaring season in order to deliver the highest yields possible.
 
 ```{r, message = FALSE}
 #Creating weather data tables
@@ -26,7 +27,8 @@ whately <- mac %>%
   tbl("whately")
 orchard <- mac %>%
   tbl("orchard")
-#making tables of daily max and min temperatures
+
+#Making tables of daily max and min temperatures
 daily_whately <- whately %>%
   mutate(the_date = date(when)) %>%
   group_by(the_date) %>%
@@ -37,7 +39,8 @@ daily_orchard <- orchard %>%
   group_by(the_date) %>%
   summarize(N = n(), minTemp = min(temperature), maxTemp = max(temperature), avgTemp = mean(temperature)) %>%
   collect()
-#making tables of sap-able days
+
+#Making tables of sap-able days
 refined_whately <- daily_whately %>%
   filter(minTemp < 0, maxTemp > 0) %>%
   mutate(date = ymd(`the_date`))
