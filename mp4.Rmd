@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(macleish)
 library(tidyverse)
+library(lubridate)
 library(sp)
 library(rgdal)
 library(rgeos)
@@ -17,7 +18,7 @@ library(ggplot2)
 
 ## problem statement and intro stuff
 
-```{r}
+```{r, message = FALSE}
 #Creating weather data tables
 mac <- etl("macleish") %>%
   etl_update()
@@ -49,7 +50,31 @@ refined_orchard <- daily_orchard %>%
 I don't know how pretty I can make this graph, so it may not be something we have t include, but it shows that the best monthes to sap are November through March. There are good sapping days in October and early April, but not enough and not consistently enough for it to be logical to continue the sapping during those months. (generally two days in mid october and three or four throughout april)
 
 ```{r}
-
+#orchard station graph
+refined_orchard %>%
+  ggplot(aes(x = date, y = avgTemp)) +
+  geom_point() + geom_smooth() +
+  ggtitle("Orchard Station Sapping Periods") +
+  xlab("Date") + ylab("Average Daily Temperature") +
+  theme_bw()
+#whately station graph
+refined_whately %>%
+  ggplot(aes(x = date, y = avgTemp)) +
+  geom_point() + geom_smooth() +
+  ggtitle("Whately Station Sapping Periods") +
+  xlab("Date") + ylab("Average Daily Temperature") +
+  theme_bw()
+```
+```{r}
+#isolating a specific sapping period
+isolated_whately <- refined_whately %>%
+  subset(date > "2014-10-19" & date < "2015-04-25")
+isolated_whately %>%
+  ggplot(aes(x = date, y = avgTemp)) +
+  geom_point() +
+  ggtitle("2014-2015 Sapping Period") +
+  xlab("Date") + ylab("Average Daily Temperature") +
+  theme_bw()
 ```
 
 ##Quantity of maple syrup
