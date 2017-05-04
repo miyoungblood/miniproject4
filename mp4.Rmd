@@ -19,6 +19,8 @@ library(ggplot2)
 ###Problem Statement
 In the wooded parcel of MacLeish Field Station, farmers and Smith students alike work to collect sap from trees in the area. However, climate change and warmer temperatures have led to a disruption in once reliable seasons. Given that MacLeish is an integral part of a local economy of farmers, producers, and distributors, it is essential to improve research and development for predicting the start and end date for the sugaring season in order to deliver the highest yields possible.
 
+###Our Data
+Within the macleish package, we used the weather data, which provided the temperatures at both the Orchard and Whatley Weather Stations at 10 minute intervals. We also used the external data file of sap yeilds, which provided us with the gallons of sap collected each sugaring season. Both data files contain 4 years worth of data (2013 - 2017). As we are working with weather and sap data, we feel our analysis would not benefit from spatial visualization, as our analysis is not contingent on the geography of the area, i.e. physical features. 
 ```{r, message = FALSE}
 #Creating weather data tables
 mac <- etl("macleish") %>%
@@ -49,18 +51,24 @@ refined_orchard <- daily_orchard %>%
   mutate(date = ymd(`the_date`))
 ```
 
-##Best times to sap ASIDE
-I don't know how pretty I can make this graph, so it may not be something we have t include, but it shows that the best monthes to sap are November through March. There are good sapping days in October and early April, but not enough and not consistently enough for it to be logical to continue the sapping during those months. (generally two days in mid october and three or four throughout april)
+###Analysis
+In our first two graphs, we can see that the best months to collect sap are November through early April. Additionally, there seem to be days in October and early April that would be favorable for collecting sap (approximately two days in mid-October and four days in April), however, these days are not consistent enough for it to be reasonable to continue the collection during these months. 
 
+Using the weather data, we calculated the minimum, maxmium, and average temperatures for each day. As our prompt stated: "In order for the sap to run, temperatures must be above freezing during the day and below freezing at night." Therefore, we then filtered our data in order to isolate days with negative minimum temperatures and positive maxmium temperatures. We then graphed the average temperatures in order to create a visual representation of the periods of time when sapping could occur. 
+
+While predicting the start and end dates of sugaring season to be November through April leaves us with a rather large interval, we can narrow our prediction to mid-February to early April, as the differences between the temperatures during the day and night are larger.
+
+We created the third graph that shows the 2014-2015 sugaring season in order to get a more in depth look at how average temperatures affect the sap yield. 
 ```{r}
-#orchard station graph
+#Orchard station graph
 refined_orchard %>%
   ggplot(aes(x = date, y = avgTemp)) +
   geom_point() + geom_smooth() +
   ggtitle("Orchard Station Sapping Periods") +
   xlab("Date") + ylab("Average Daily Temperature") +
   theme_bw()
-#whately station graph
+
+#Whately station graph
 refined_whately %>%
   ggplot(aes(x = date, y = avgTemp)) +
   geom_point() + geom_smooth() +
@@ -69,7 +77,7 @@ refined_whately %>%
   theme_bw()
 ```
 ```{r}
-#isolating a specific sapping period
+#Isolating a specific sapping period
 isolated_whately <- refined_whately %>%
   subset(date > "2014-10-19" & date < "2015-04-25")
 isolated_whately %>%
@@ -80,22 +88,8 @@ isolated_whately %>%
   theme_bw()
 ```
 
-##Quantity of maple syrup
+###Maple syrup yeilds
+Using the data file on the gallons of sap collected, we calculated the totals for each year (2013 - 2017) and found that the yield in 2014 was significantly lower than the rest. 2014 experienced more variation in average temperatures during the sapping period as shown in the Whately graph. These measurements support the evidence of climate change having negative repercussions on sap yields, not only in MacLeish, but for maple farmers everywhere. 
 
-```{r}
-
-```
-
-##ASIDE 
-I don't have the sap table up yet but the totals for each year are:
-2013 = 675
-2014 = 255 (very sporadic data for collection, most days had NA)
-2015 = 349 (also fairly sporadic)
-2016 = no data for this year
-2017 = 259.5
-
-averages:
-2013 = 18.24
-2014 = 6.38
-2015 = 14.54
-2017 = 17.38
+###Actionable Recommendation
+Our recommendation for future Smith students is to further explore this data by creating a statistical model that quantifies the uncertainty we are still left with after our analysis to an acceptable level so that they can predict a reliable outcome, i.e. the probability of obtaining a certain yield by beginning/ending their sugaring season by a specific date. 
